@@ -1,27 +1,34 @@
 import { Stack } from "expo-router";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const RootLayout = () => {
-  return <Stack
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#f4511e",
-      },
-      headerTintColor: "#fff",
-      headerTitleStyle: {
-        fontWeight: "bold",
-        fontSize: 20,
-      },
-      headerTitleAlign: "center",
-      contentStyle:{
-        paddingHorizontal: 10,
-        paddingTop: 10,
-        backgroundColor: "#fff",
-      }
-    }}
-  >
-    <Stack.Screen name="index" options={{title: "Home"}} />
-    <Stack.Screen name="notes" options={{headerTitle: "Notes"}} /> 
-  </Stack>
+
+  return(
+  <AuthProvider>
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#f4511e",
+        },
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 20,
+        },
+        headerTitleAlign: "center",
+        contentStyle:{
+          paddingHorizontal: 10,
+          paddingTop: 10,
+          backgroundColor: "#fff",
+        }
+      }}
+    >
+      <Stack.Screen name="index" options={{title: "Home"}} />
+      <Stack.Screen name="notes" options={{headerTitle: "Notes"}} />
+      <Stack.Screen name="auth" options={{headerTitle: "Login"}} />
+    </Stack>
+  </AuthProvider>
+  );
   // A stack navigator is used to manage the navigation between screens in the app.
   // It is what you would typically use to create a stack-based navigation structure.
   // Its default behavior is to push new screens onto the stack when navigating to them,

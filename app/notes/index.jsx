@@ -3,17 +3,32 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator} from
 import NoteList from "@/components/NoteList";
 import AddNoteModal from "@/components/AddNoteModal";
 import noteService from "@/services/noteService";
+import  {useRouter} from "expo-router"; 
+import { useAuth } from "@/contexts/AuthContext";
+import { use } from "react";
 
 const NotesScreen = () => {
+    const router = useRouter();
+    const {user, loading:authLoading} = useAuth();
+
+
     const [notes, setNotes] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [newNote, setNewNote] = useState({title: "", content: ""});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    useEffect(()=>{
+        if(!authLoading && !user){
+            router.push("/auth");
+        }
+    },[authLoading, user]);
+
     useEffect(() => {
-        fetchNotes();
-    },[])
+        if (user){
+            fetchNotes();
+        }
+    },[user]);
 
     const fetchNotes = async () => {
         setLoading(true);
