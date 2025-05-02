@@ -117,7 +117,13 @@ const NotesScreen = () => {
         <>
         {error && <Text style={styles.errorText}>{error}</Text>}
         {/* <Text style={{fontSize: 24, fontWeight: "bold", marginBottom: 20}}>My Notes</Text> */}
+        {notes.length === 0 ? (
+            <Text style={styles.emptyNotes}>No notes available. Please add a note.</Text>
+        ) :
+         (
         <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
+        )
+        }
         </>
         )}
      
@@ -166,6 +172,13 @@ const styles = StyleSheet.create({
         color: "red",
         fontSize: 16,
         fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 20,
+    },
+    emptyNotes: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#6c757d",
         textAlign: "center",
         marginTop: 20,
     },
