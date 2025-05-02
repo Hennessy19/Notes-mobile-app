@@ -5,7 +5,6 @@ import AddNoteModal from "@/components/AddNoteModal";
 import noteService from "@/services/noteService";
 import  {useRouter} from "expo-router"; 
 import { useAuth } from "@/contexts/AuthContext";
-import { use } from "react";
 
 const NotesScreen = () => {
     const router = useRouter();
@@ -33,7 +32,7 @@ const NotesScreen = () => {
     const fetchNotes = async () => {
         setLoading(true);
         // console.log("Fetching notes...");
-        const response = await noteService.getAllNotes();
+        const response = await noteService.getAllNotes(user.$id);
         // console.log("Fetched notes:", response);
         if (response.error) {
             setError(response.error);
@@ -50,7 +49,7 @@ const NotesScreen = () => {
         if (newNote.title && newNote.content) {
             // console.log("Adding note: ✅✅✅", newNote);
 
-            const response = await noteService.addNote(newNote);
+            const response = await noteService.addNote(user.$id, newNote);
             console.log("Added note:", response);
             if (response.error) {
                 Alert.alert("Error", response.error);

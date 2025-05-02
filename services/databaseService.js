@@ -1,7 +1,7 @@
 import { database } from "./appwrite";
 
 const databaseService = {
-    async getAllDocuments(dbId, colId){
+    async getAllDocuments(dbId, colId, queries = []) {
         try {
             
             const response = await database.listDocuments(dbId, colId); 
@@ -10,7 +10,7 @@ const databaseService = {
             //it is part of the appwrite SDK.
             // The response will contain an array of documents in the collection.
 
-            return response.documents || [];
+            return {data: response.documents || [], error: null};
 
         } catch (error) {
             console.error('Error fetching documents:', error);

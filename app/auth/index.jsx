@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 const AuthScreen = () => {
   const {login, register } = useAuth();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +14,7 @@ const AuthScreen = () => {
   const [error, setError] = useState(null);
 
   const handleAuth = async () => {
-    if (!email || !password) {
+    if (!email.trim() || !password.trim()) {
         setError("Email and password are required");
         return;
     }
@@ -21,6 +22,19 @@ const AuthScreen = () => {
         setError("Passwords do not match");
         return;
     } 
+
+    let response;
+    if (isRegistering) {
+        response = await register(email, password);
+    } else {
+        response = await login(email, password);
+    }
+    if (response.error) {
+      Alert.alert("Error", response.error);
+      return;
+    } 
+
+    router.push("/notes");
 };
 
 
@@ -43,7 +57,8 @@ const AuthScreen = () => {
             placeholderTextColor="#aaa"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={true}
+            secureTextEntry
+            textContentType="none"
         />
         {isRegistering && (
             <TextInput
@@ -52,13 +67,13 @@ const AuthScreen = () => {
                 placeholderTextColor="#aaa"
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                secureTextEntry={true}
+                secureTextEntry
+                textContentType="none"
             />
         )}
         <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-            }}
+            onPress={handleAuth}
         >
             <Text style={styles.buttonText}>{isRegistering ? "Sign Up" : "Login"}</Text>
         </TouchableOpacity>

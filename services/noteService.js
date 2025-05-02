@@ -1,22 +1,35 @@
 import databaseService from "./databaseService";
-import { ID } from 'react-native-appwrite';
+import { ID, Query } from 'react-native-appwrite';
 
 const dbId = process.env.EXPO_PUBLIC_APPWRITE_DB_ID;
 const colId = process.env.EXPO_PUBLIC_APPWRITE_COL_NOTES_ID;
 
 const noteService = {
-    async getAllNotes(){
-        // console.log("Fetching all notes...");
-        const response = await databaseService.getAllDocuments(dbId, colId);
-        // console.log("Fetched notes:", response);
-        if (response.error) {
-            console.error('Error fetching notes:', response.error);
-            return {error: response.error};
+    async getAllNotes(userId){
+        if(!userId){
+            console.error("Empty user Id")
+            return{data:[], error: "User ID is missing"}
         }
-        return {data: response};
+
+        try {
+            const response = await databaseService.getAllDocuments(dbId, colId, [Query.equal('user_id', userId)]); // Fetch all notes for the user
+            return response;
+            
+        } catch (error) {
+            console.error("Error fetching Notes :", error);
+            return {data: [], error: "Error fetching notes"};
+            
+        }
+        // console.log("Fetching all notes...");
+        // console.log("Fetched notes:", response);
+        // if (response.error) {
+        //     console.error('Error fetching notes:', response.error);
+        //     return {error: response.error};
+        // }
+        // return {data: response};
     },
 
-    async addNote(data){
+    async addNote(user_id,data){
         if(!data) {
             console.error('No data provided to addNote');
             return {error: 'No data provided'};
@@ -25,6 +38,7 @@ const noteService = {
             title: data.title,
             content: data.content,
             createdAt: new Date().toISOString(),
+            user_id: user_id,
         };
 
         const response = await databaseService.addDocument(dbId, colId, ID.unique(), newNote);

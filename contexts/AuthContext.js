@@ -43,11 +43,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     const logout = async () => {
+        console.log("Logging out...");
         const response = await authService.logout();
         if(response?.error){
+            console.log("Logout failed ❌❌", response.error);
             return response
         }
         setUser(null);
+        console.log("Logged out successfully ✅✅");
         return {success: true}; 
     }
 
